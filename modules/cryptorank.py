@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def get_cryptorank_drops():
+def get_cryptorank_testnets():
     """
     Парсит CryptoRank Drophunting и возвращает проекты с пометкой Testnet.
     """

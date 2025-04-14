@@ -2,36 +2,23 @@ import requests
 from bs4 import BeautifulSoup
 
 def get_partnerkin_testnets():
-    """
-    Парсит статью с сайта partnerkin.com и достает названия и ссылки тестнетов.
-    """
-    url = "https://partnerkin.com/blog/stati/top-testnets-2025"
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
 
+    url = "https://partnerkin.com/ru/cat/crypto"
     try:
-        response = requests.get(url, headers=headers)
-        if response.status_code != 200:
-            print("Ошибка при запросе к Partnerkin:", response.status_code)
-            return []
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
 
         soup = BeautifulSoup(response.text, "html.parser")
+        links = soup.find_all("a", href=True)
+
         testnets = []
-
-        content = soup.find("div", class_="article_text")
-        if not content:
-            print("Не найден основной блок статьи")
-            return []
-
-        links = content.find_all("a", href=True)
         for link in links:
-            title = link.get_text(strip=True)
             href = link["href"]
-            if "http" in href and len(title) > 4:
+            if any(sub in href for sub in ["testnet", "faucet", "quest", "airdrop", "campaign", "layer3", "guild", "mirror", "zora", "lens", "0g.ai", "monad"]):
+                full_url = href if href.startswith("http") else f"https://partnerkin.com{href}"
                 testnets.append({
-                    "name": title,
-                    "url": href,
+                    "title": link.get_text(strip=True) or "Без названия",
+                    "url": full_url,
                     "source": "partnerkin"
                 })
 

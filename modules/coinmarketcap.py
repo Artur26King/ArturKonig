@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def fetch_coinmarketcap_airdrops():
+def get_coinmarketcap_testnets():
     url = "https://coinmarketcap.com/airdrop/"
     try:
         response = requests.get(url, timeout=10)

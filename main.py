@@ -4,19 +4,22 @@ from modules.rpcinfo import get_rpc_chains
 from modules.testnet_faucet import get_testnets_from_faucet
 from modules.rpc_info import get_rpc_networks
 from modules.incrypted import get_incrypted_testnets
-from modules.cryptorank import get_cryptorank_drops
+from modules.cryptorank import get_cryptorank_testnets
 from modules.airdropalert import get_airdropalert_testnets
 from modules.partnerkin import get_partnerkin_testnets
 from modules.testnet_help import get_testnet_help_links
 from modules.nodesguru import get_nodesguru_testnets
 from modules.dropsearn import get_dropsearn_testnets
 from modules.galxe import get_galxe_testnets
-from modules.coinmarketcap import fetch_coinmarketcap_airdrops
-
-fetch_coinmarketcap_airdrops()
+from modules.coinmarketcap import get_coinmarketcap_testnets
+from modules import partnerkin
 
 def main():
     coins = get_top_coins(limit=10)
+
+    print("🧪 Найденные тестнеты с Partnerkin:")
+    for item in partnerkin.get_partnerkin_testnets():
+        print(f"- {item['title']}: {item['url']}")
 
     print("\n🧪 Найденные тестнеты с Galxe:")
     galxe = get_galxe_testnets()
@@ -102,6 +105,30 @@ def main():
         price = coin['current_price']
         market_cap = coin['market_cap']
         print(f"{name} ({symbol}) — Цена: ${price} | Капитализация: ${market_cap}")
+
+def collect_all_testnet_data():
+    all_testnets = []
+
+    try:
+        from modules import partnerkin, cryptorank, incrypted, airdropalert, coinmarketcap, galxe, dropsearn
+        all_testnets += partnerkin.get_partnerkin_testnets()
+        all_testnets += cryptorank.get_cryptorank_testnets()
+        all_testnets += incrypted.get_incrypted_testnets()
+        all_testnets += airdropalert.get_airdropalert_testnets()
+        all_testnets += coinmarketcap.get_coinmarketcap_testnets()
+        all_testnets += galxe.get_galxe_testnets()
+        all_testnets += dropsearn.get_dropsearn_testnets()
+
+        filtered_testnets = filter_testnets(all_testnets)
+        return filtered_testnets
+
+
+
+    except Exception as e:
+        print(f"❌ Ошибка при сборе тестнетов: {e}")
+
+    return all_testnets
+
 
 if __name__ == "__main__":
     main()
