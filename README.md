@@ -1,37 +1,34 @@
-# 🧠 Testnet Tracker — Crypto Project Monitor
+🚀 Testnet Tracker — Web3 Project Monitor
+Testnet Tracker is a modern web application that automatically collects, filters, and displays the latest crypto projects and testnets from Telegram channels and other trusted sources.
 
-## 🚀 About the Project
-This Python-based app tracks new testnets, airdrops, and crypto project updates across the most relevant sources in Web3.  
-Built to **save time** for developers, testers, and crypto investors by aggregating all the essential data in one place.
+🔍 Features
+📡 Auto-fetches testnet updates from Telegram
 
-## 🔍 Key Features
-- ✅ Automatically finds fresh testnets (from Incrypted, Partnerkin, Galxe, RPC, DropsEarn, and more)
-- ✅ Tracks top 10 cryptocurrencies and their market caps in real-time (via CoinGecko & CoinMarketCap APIs)
-- ✅ Monitors leading DeFi protocols by TVL (via DeFiLlama)
-- ✅ Modular architecture — easy to expand with Telegram bot, notifications, or frontend dashboard
+🌐 Toggle between Telegram-only and Full API sources
 
-## ⚙️ Tech Stack
-- **Python 3.11**
-- `requests`, `beautifulsoup4`
-- Git / GitHub version control
+🌗 Dark mode enabled by default with light/dark toggle
 
-## 💼 Ideal for:
-- Crypto automation portfolios
-- FinTech internships
-- Web3 hackathons or dev grants
+📋 Clean, filterable, and sortable testnet table
 
-## 🧑‍💻 Author
-**Artur Pirohov** — aspiring backend developer based in Florida 🇺🇸  
-Dedicated to building useful, production-ready tools in the Web3 and FinTech ecosystem.
+⚡ Animated "gate" opening effect on page load
 
-> “⏱ Time is money — automation saves both.”
+🌍 AI-translated project descriptions for better clarity
 
----
+📱 Fully responsive and mobile-friendly
 
-## 📦 Quick Start
+💡 Why It Matters
+Stay up to date with the latest Web3 testnets and airdrops without monitoring channels manually. Built to save time and simplify discovery.
 
-```bash
-git clone https://github.com/Artur26King/ArturKonig.git
-cd ArturKonig
-pip install -r requirements.txt
-python main.py
+🛠️ Tech Stack
+HTML, CSS, JavaScript (Frontend)
+
+GitHub Pages for hosting
+
+Flask + SQLite (Backend available in extended version)
+
+Telegram API via Telethon
+
+AI translation and filtering (in advanced version)
+
+🔗 Live Demo
+https://artur26king.github.io/ArturKonig/
