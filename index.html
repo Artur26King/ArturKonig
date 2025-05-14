@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Testnet Tracker</title>
+  <style>
+    /* Basic page styles */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+    }
+    h1 {
+      text-align: center;
+    }
+
+    /* Dark mode */
+    body.dark {
+      background-color: #121212;
+      color: #eee;
+    }
+
+    /* Gate wrapper styling */
+    #gate-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      display: flex;
+      pointer-events: none;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    /* Left and right gates */
+    .gate {
+      width: 50%;
+      height: 100%;
+      background-size: 300% 300%;
+      animation: gradientFlow 1.2s ease infinite;
+    }
+
+    #gate-left {
+      background: linear-gradient(135deg, #ff7eb3, #ff758c, #ff6a00);
+      clip-path: path('M 0 0 Q 100 300 0 1000 L 0 2000 Q 100 1600 0 3000 Z');
+    }
+
+    #gate-right {
+      background: linear-gradient(135deg, #23d5ab, #23a6d5, #e73c7e);
+      clip-path: path('M 100% 0 Q 0 300 100% 1000 L 100% 2000 Q 0 1600 100% 3000 Z');
+    }
+
+    .gate-animate #gate-left {
+      animation: slideLeft 2.7s ease forwards, gradientFlow 1.2s ease infinite;
+    }
+    .gate-animate #gate-right {
+      animation: slideRight 2.7s ease forwards, gradientFlow 1.2s ease infinite;
+    }
+
+    /* Color flow effect */
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Gate slide animations */
+    @keyframes slideLeft {
+      0% { transform: translateX(0) scale(1); }
+      100% { transform: translateX(-100vw) scale(1.1); }
+    }
+
+    @keyframes slideRight {
+      0% { transform: translateX(0) scale(1); }
+      100% { transform: translateX(100vw) scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Gate Animation Layer -->
+  <div id="gate-wrapper">
+    <div id="gate-left" class="gate"></div>
+    <div id="gate-right" class="gate"></div>
+  </div>
+
+  <h1>Testnet Tracker</h1>
+
+  <script>
+    // Trigger gate animation on page load
+    window.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add("gate-animate");
+      setTimeout(() => {
+        document.getElementById("gate-wrapper")?.remove();
+      }, 2800); // animation duration + delay
+    });
+  </script>
+</body>
+</html>
