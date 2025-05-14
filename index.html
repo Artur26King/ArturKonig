@@ -3,24 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <title>Testnet Tracker</title>
-  <style>
-    /* Basic page styles */
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      transition: background 0.3s, color 0.3s;
-    }
-    h1 {
-      text-align: center;
-    }
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    /* Dark mode */
-    body.dark {
+  <!-- 🌑 Устанавливаем тему до загрузки стилей -->
+  <script>
+    if (!localStorage.getItem("theme")) {
+      localStorage.setItem("theme", "dark");
+    }
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.classList.add("dark");
+    }
+  </script>
+
+  <style>
+    html.dark body {
       background-color: #121212;
       color: #eee;
     }
+    html.dark th { background-color: #1e1e1e; }
+    html.dark td { background-color: #1a1a1a; }
+    html.dark a { color: #4ea1ff; }
 
-    /* Gate wrapper styling */
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      padding: 20px;
+      transition: background 0.3s, color 0.3s;
+      background-color: #fff;
+      color: #000;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #themeToggle {
+      background-color: #1f1f1f;
+      border: 1px solid #555;
+      color: #eee;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #themeToggle:hover {
+      background-color: #333;
+    }
+
+    input[type="radio"] {
+      margin-right: 6px;
+    }
+    label {
+      margin: 0 10px;
+      font-size: 14px;
+    }
+
+    #searchInput, #sortSelect {
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    html.dark #searchInput,
+    html.dark #sortSelect {
+      background-color: #1e1e1e;
+      color: #eee;
+      border: 1px solid #444;
+    }
+
+    tr.fade-in {
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     #gate-wrapper {
       position: fixed;
       top: 0;
@@ -30,71 +118,173 @@
       z-index: 9999;
       display: flex;
       pointer-events: none;
-      background: transparent;
       overflow: hidden;
     }
 
-    /* Left and right gates */
-    .gate {
-      width: 50%;
-      height: 100%;
+    #gate-left, #gate-right {
+      width: 50vw;
+      height: 100vh;
       background-size: 300% 300%;
-      animation: gradientFlow 1.2s ease infinite;
+      animation: gradientMove 1.5s linear infinite;
+      transition: transform 2.5s ease-in-out;
     }
 
     #gate-left {
       background: linear-gradient(135deg, #ff7eb3, #ff758c, #ff6a00);
-      clip-path: path('M 0 0 Q 100 300 0 1000 L 0 2000 Q 100 1600 0 3000 Z');
     }
 
     #gate-right {
       background: linear-gradient(135deg, #23d5ab, #23a6d5, #e73c7e);
-      clip-path: path('M 100% 0 Q 0 300 100% 1000 L 100% 2000 Q 0 1600 100% 3000 Z');
     }
 
-    .gate-animate #gate-left {
-      animation: slideLeft 2.7s ease forwards, gradientFlow 1.2s ease infinite;
-    }
-    .gate-animate #gate-right {
-      animation: slideRight 2.7s ease forwards, gradientFlow 1.2s ease infinite;
-    }
-
-    /* Color flow effect */
-    @keyframes gradientFlow {
+    @keyframes gradientMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* Gate slide animations */
-    @keyframes slideLeft {
-      0% { transform: translateX(0) scale(1); }
-      100% { transform: translateX(-100vw) scale(1.1); }
+    .gate-animate #gate-left {
+      transform: translateX(-100%);
     }
 
-    @keyframes slideRight {
-      0% { transform: translateX(0) scale(1); }
-      100% { transform: translateX(100vw) scale(1.1); }
+    .gate-animate #gate-right {
+      transform: translateX(100%);
     }
   </style>
 </head>
+
 <body>
-  <!-- Gate Animation Layer -->
+  <!-- 🎬 Gate Cover -->
   <div id="gate-wrapper">
-    <div id="gate-left" class="gate"></div>
-    <div id="gate-right" class="gate"></div>
+    <div id="gate-left"></div>
+    <div id="gate-right"></div>
   </div>
 
-  <h1>Testnet Tracker</h1>
+  <!-- 🌍 Filters -->
+  <div style="text-align: center; margin: 20px 0;">
+    <label><input type="radio" name="apiSource" value="telegram" checked> Telegram Only</label>
+    <label><input type="radio" name="apiSource" value="full"> All Sources</label>
+  </div>
 
+  <h1>Testnet Tracker — Telegram Feed</h1>
+
+  <!-- 🌓 Theme Toggle -->
+  <div style="text-align: center; margin-top: 10px;">
+    <button id="themeToggle">☀️ Toggle Theme</button>
+  </div>
+
+  <!-- 🔍 Search -->
+  <div style="text-align: center; margin-top: 20px;">
+    <input type="text" id="searchInput" placeholder="Search testnets..." style="width: 60%;">
+  </div>
+
+  <!-- 🔽 Sort -->
+  <div style="text-align: center; margin-top: 10px;">
+    <label for="sortSelect">Sort by:</label>
+    <select id="sortSelect">
+      <option value="desc" selected>Newest First</option>
+      <option value="asc">Oldest First</option>
+    </select>
+  </div>
+
+  <!-- 📋 Table -->
+  <table id="testnet-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Title</th>
+        <th>Source</th>
+        <th>Link</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- 🔧 JS -->
   <script>
-    // Trigger gate animation on page load
+    const themeToggle = document.getElementById("themeToggle");
+    const userPref = localStorage.getItem("theme");
+
+    let allTestnets = [];
+
+    function applyFilters() {
+      const keyword = document.getElementById("searchInput").value.trim().toLowerCase();
+      const sortOrder = document.getElementById("sortSelect").value;
+      const selectedSource = document.querySelector('input[name="apiSource"]:checked').value;
+
+      let filtered = allTestnets.filter(item =>
+        item.title.toLowerCase().includes(keyword) ||
+        item.translated_description.toLowerCase().includes(keyword)
+      );
+
+      if (selectedSource === "telegram") {
+        filtered = filtered.filter(item => item.source && item.source !== "coinmarketcap");
+      }
+
+      filtered.sort((a, b) => new Date(sortOrder === "asc" ? a.date : b.date) - new Date(sortOrder === "asc" ? b.date : a.date));
+
+      displayTestnets(filtered);
+    }
+
+    async function loadTestnets() {
+      const selectedSource = document.querySelector('input[name="apiSource"]:checked').value;
+      const endpoint = selectedSource === "full" ? "/api/testnets/full" : "/api/testnets/telegram";
+      try {
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        allTestnets = data;
+        applyFilters();
+      } catch (err) {
+        console.error("❌ Error loading testnets:", err);
+      }
+    }
+
+    function displayTestnets(testnets) {
+      const tbody = document.querySelector("#testnet-table tbody");
+      tbody.innerHTML = "";
+      testnets.forEach(item => {
+        const row = document.createElement("tr");
+        row.classList.add("fade-in");
+        row.innerHTML = `
+          <td>${item.date}</td>
+          <td>${item.title}</td>
+          <td>${item.source}</td>
+          <td><a href="${item.url}" target="_blank">Open</a></td>
+          <td>${formatDescription(item.translated_description)}</td>`;
+        tbody.appendChild(row);
+      });
+    }
+
+    function formatDescription(text) {
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      return text.replace(urlRegex, url => `<a href="${url}" target="_blank">${url}</a>`);
+    }
+
+    document.querySelectorAll('input[name="apiSource"]').forEach(r => r.addEventListener("change", loadTestnets));
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("sortSelect").addEventListener("change", applyFilters);
+
+    themeToggle.addEventListener("click", () => {
+      const isNowDark = document.documentElement.classList.toggle("dark");
+      localStorage.setItem("theme", isNowDark ? "dark" : "light");
+      themeToggle.textContent = isNowDark ? "☀️ Toggle Theme" : "🌙 Toggle Theme";
+    });
+
+    loadTestnets();
+
     window.addEventListener("DOMContentLoaded", () => {
-      document.body.classList.add("gate-animate");
+      setTimeout(() => {
+        document.body.classList.add("gate-animate");
+      }, 100);
       setTimeout(() => {
         document.getElementById("gate-wrapper")?.remove();
-      }, 2800); // animation duration + delay
+      }, 2700);
     });
+
+    // Установить правильную надпись на кнопке
+    themeToggle.textContent = document.documentElement.classList.contains("dark")
+      ? "☀️ Toggle Theme" : "🌙 Toggle Theme";
   </script>
 </body>
 </html>
